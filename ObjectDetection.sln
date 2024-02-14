@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ObjectDetection", "ObjectDetection\ObjectDetection.vcxproj", "{52B05C93-1611-42A8-B432-0FDE9F3B459C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{52B05C93-1611-42A8-B432-0FDE9F3B459C}.Debug|x64.ActiveCfg = Debug|x64
+		{52B05C93-1611-42A8-B432-0FDE9F3B459C}.Debug|x64.Build.0 = Debug|x64
+		{52B05C93-1611-42A8-B432-0FDE9F3B459C}.Debug|x86.ActiveCfg = Debug|Win32
+		{52B05C93-1611-42A8-B432-0FDE9F3B459C}.Debug|x86.Build.0 = Debug|Win32
+		{52B05C93-1611-42A8-B432-0FDE9F3B459C}.Release|x64.ActiveCfg = Release|x64
+		{52B05C93-1611-42A8-B432-0FDE9F3B459C}.Release|x64.Build.0 = Release|x64
+		{52B05C93-1611-42A8-B432-0FDE9F3B459C}.Release|x86.ActiveCfg = Release|Win32
+		{52B05C93-1611-42A8-B432-0FDE9F3B459C}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8AA36C47-4AFE-453F-B17B-95DC26652831}
+	EndGlobalSection
+EndGlobal
