@@ -5,7 +5,6 @@
 #include <opencv2/dnn.hpp>
 #include <opencv2/dnn/all_layers.hpp>
 #include <iostream>
-#include <wx/protocol/http.h>
 using namespace cv;
 using namespace std;
 using namespace dnn;
