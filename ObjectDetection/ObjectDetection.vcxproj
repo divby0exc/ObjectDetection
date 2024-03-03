@@ -159,6 +159,12 @@
     <ClCompile Include="ObjectDetection.cpp" />
     <ClCompile Include="Register.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Login.h" />
+    <ClInclude Include="Logout.h" />
+    <ClInclude Include="MainView.h" />
+    <ClInclude Include="Register.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
