@@ -160,6 +160,7 @@
     <ClCompile Include="Register.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="App.h" />
     <ClInclude Include="Login.h" />
     <ClInclude Include="Logout.h" />
     <ClInclude Include="MainView.h" />
