@@ -167,6 +167,9 @@
     <ClInclude Include="MainView.h" />
     <ClInclude Include="Register.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="IMG-20240211-WA0024.jpg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
