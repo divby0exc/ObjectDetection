@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClCompile Include="Login.cpp" />
     <ClCompile Include="Logout.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainView.cpp" />
     <ClCompile Include="ObjectDetection.cpp" />
     <ClCompile Include="Register.cpp" />

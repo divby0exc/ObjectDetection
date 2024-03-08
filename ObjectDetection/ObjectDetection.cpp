@@ -5,11 +5,7 @@
 #include <opencv2/dnn.hpp>
 #include <opencv2/dnn/all_layers.hpp>
 #include <iostream>
+
 using namespace cv;
 using namespace std;
 using namespace dnn;
-
-int main()
-{
-    return 0;
-}
