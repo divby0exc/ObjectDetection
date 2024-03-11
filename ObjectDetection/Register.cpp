@@ -20,3 +20,8 @@ void Register::clear_fields(wxCommandEvent& evt)
 	username_in->Clear();
 	password_in->Clear();
 }
+
+void Register::register_user(wxCommandEvent& evt)
+{
+	// POCO
+}
