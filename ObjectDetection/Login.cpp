@@ -10,24 +10,34 @@
 #include <Poco/Exception.h>
 #include <Poco/JSON/Parser.h>
 
-Login::Login(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
+Login::Login(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, wxDefaultPosition, wxSize(300, 200)) {
 	wxPanel* panel = new wxPanel(this);
 
-	wxStaticText* username_text = new wxStaticText(panel, wxID_ANY, "Username", wxPoint(50, 10));
-	wxTextCtrl* username = new wxTextCtrl(panel, wxID_ANY, "", wxPoint(50, 30));
-	username->Bind(wxEVT_TEXT, &Login::set_username, this);
+	wxBoxSizer* vSizer = new wxBoxSizer(wxVERTICAL);
 
-	wxStaticText* password_text = new wxStaticText(panel, wxID_ANY, "Password", wxPoint(50, 60));
-	wxTextCtrl* password = new wxTextCtrl(panel, wxID_ANY, "", wxPoint(50, 80), wxDefaultSize, wxTE_PASSWORD);
-	password->Bind(wxEVT_TEXT, &Login::set_pwd, this);
+	wxBoxSizer* usernameSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxStaticText* usernameLabel = new wxStaticText(panel, wxID_ANY, "Username:");
+	wxTextCtrl* username = new wxTextCtrl(panel, wxID_ANY, "");
+	usernameSizer->Add(usernameLabel, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+	usernameSizer->Add(username, 1, wxEXPAND | wxALL, 5);
+	vSizer->Add(usernameSizer, 0, wxEXPAND | wxALL, 5);
 
-	wxButton* login = new wxButton(panel, wxID_ANY, "Login", wxPoint(50,110));
-	login->Bind(wxEVT_BUTTON, &Login::show_shit, this);
+	wxBoxSizer* passwordSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxStaticText* passwordLabel = new wxStaticText(panel, wxID_ANY, "Password:");
+	wxTextCtrl* password = new wxTextCtrl(panel, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
+	passwordSizer->Add(passwordLabel, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+	passwordSizer->Add(password, 1, wxEXPAND | wxALL, 5);
+	vSizer->Add(passwordSizer, 0, wxEXPAND | wxALL, 5);
 
-	wxButton* register_btn = new wxButton(panel, wxID_ANY, "Register", wxPoint(175, 110));
+	wxButton* loginBtn = new wxButton(panel, wxID_ANY, "Login");
+	vSizer->Add(loginBtn, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5);
 
-	
+	wxButton* registerBtn = new wxButton(panel, wxID_ANY, "Register");
+	vSizer->Add(registerBtn, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5);
 
+	panel->SetSizer(vSizer);
+
+	Centre();
 }
 
 void Login::set_username(wxCommandEvent& evt)
