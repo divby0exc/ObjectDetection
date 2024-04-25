@@ -12,7 +12,7 @@
 #include "Register.h"
 #include "User.h"
 
-static User user;
+static User user_obj;
 
 Login::Login(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
 	wxPanel* panel = new wxPanel(this);
@@ -37,32 +37,23 @@ Login::Login(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
 
 void Login::set_username(wxCommandEvent& evt)
 {
-	username= evt.GetString();
+	user_obj.set_username((std::string) evt.GetString());
 	evt.Skip();
 }
 
 void Login::set_pwd(wxCommandEvent& evt)
 {
-	password = evt.GetString();
+	user_obj.set_password((std::string) evt.GetString());
 	evt.Skip();
 }
 
-std::string Login::get_username()
-{
-	return username;
-}
-
-std::string Login::get_pwd()
-{
-	return password;
-}
 
 void Login::show_shit(wxCommandEvent& evt) {
 	Poco::URI uri("http://127.0.0.1:5000/login");
 	try {
 		Poco::JSON::Object::Ptr user = new Poco::JSON::Object;
-		user->set("username", get_username());
-		user->set("password", get_pwd());
+		user->set("username", user_obj.get_username());
+		user->set("password", user_obj.get_password());
 
 		std::ostringstream data;
 		Poco::JSON::Stringifier::stringify(user, data);
