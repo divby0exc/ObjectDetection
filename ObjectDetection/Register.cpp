@@ -1,5 +1,12 @@
 #include <wx/wx.h>
 #include "Register.h"
+#include <Poco/Net/HTTPClientSession.h>
+#include <Poco/Net/HTTPRequest.h>
+#include <Poco/Net/HTTPResponse.h>
+#include <Poco/URI.h>
+#include <Poco/StreamCopier.h>
+#include <Poco/Exception.h>
+#include <Poco/JSON/Parser.h>
 
 Register::Register(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
 	wxPanel* panel = new wxPanel(this);
@@ -24,6 +31,43 @@ void Register::clear_fields(wxCommandEvent& evt)
 
 void Register::register_user(wxCommandEvent& evt)
 {
-	// POCO
-	wxMessageBox("Working");
+	Poco::URI uri("http://127.0.0.1:5000/login");
+	try {
+		Poco::JSON::Object::Ptr user = new Poco::JSON::Object;
+		user->set("username", get_username());
+		user->set("password", get_pwd());
+
+		std::ostringstream data;
+		Poco::JSON::Stringifier::stringify(user, data);
+		std::string json_data = data.str();
+
+		Poco::Net::HTTPClientSession sess(uri.getHost(), uri.getPort());
+		Poco::Net::HTTPRequest req(Poco::Net::HTTPRequest::HTTP_POST, uri.getPathAndQuery(), Poco::Net::HTTPMessage::HTTP_1_1);
+		req.setContentType("application/json");
+		req.setContentLength(json_data.length());
+
+		std::ostream& req_stream = sess.sendRequest(req);
+		req_stream << json_data;
+
+		Poco::Net::HTTPResponse res;
+		std::istream& res_stream = sess.receiveResponse(res);
+
+		std::stringstream ss;
+		Poco::StreamCopier::copyStream(res_stream, ss);
+		std::string res_data = ss.str();
+
+		Poco::JSON::Parser parser;
+		Poco::Dynamic::Var json_res = parser.parse(res_data);
+		Poco::JSON::Object::Ptr obj = json_res.extract<Poco::JSON::Object::Ptr>();
+
+		std::ostringstream oss;
+		obj->stringify(oss);
+
+		wxString json_str(oss.str());
+
+		wxMessageBox(json_str, "Response: ", wxOK | wxICON_INFORMATION);
+	}
+	catch (Poco::Exception& ex) {
+		wxMessageBox("Poco Exception: " + ex.displayText());
+	}
 }

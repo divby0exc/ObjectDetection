@@ -9,6 +9,10 @@
 #include <Poco/StreamCopier.h>
 #include <Poco/Exception.h>
 #include <Poco/JSON/Parser.h>
+#include "Register.h"
+#include "User.h"
+
+static User user;
 
 Login::Login(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
 	wxPanel* panel = new wxPanel(this);
@@ -25,6 +29,7 @@ Login::Login(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
 	login->Bind(wxEVT_BUTTON, &Login::show_shit, this);
 
 	wxButton* register_btn = new wxButton(panel, wxID_ANY, "Register", wxPoint(175, 110));
+	register_btn->Bind(wxEVT_BUTTON, &Login::register_view, this);
 
 	
 
@@ -94,4 +99,12 @@ void Login::show_shit(wxCommandEvent& evt) {
 	}
 
 
+}
+
+void Login::register_view(wxCommandEvent& evt) {
+	Register* register_frame = new Register("Register");
+	register_frame->SetClientSize(300, 300);
+	register_frame->Center();
+	register_frame->Show();
+	this->Close();
 }
