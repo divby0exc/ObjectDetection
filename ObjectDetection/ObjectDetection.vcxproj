@@ -159,6 +159,7 @@
     <ClCompile Include="MainView.cpp" />
     <ClCompile Include="ObjectDetection.cpp" />
     <ClCompile Include="Register.cpp" />
+    <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Logout.h" />
     <ClInclude Include="MainView.h" />
     <ClInclude Include="Register.h" />
+    <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="IMG-20240211-WA0024.jpg" />

@@ -7,6 +7,9 @@
 #include <Poco/StreamCopier.h>
 #include <Poco/Exception.h>
 #include <Poco/JSON/Parser.h>
+#include "User.h"
+
+static User user_obj;
 
 Register::Register(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
 	wxPanel* panel = new wxPanel(this);
@@ -18,10 +21,12 @@ Register::Register(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
 
 	wxStaticText* username_txt = new wxStaticText(panel, wxID_ANY, "Username", wxPoint(130, 10));
 	username_in = new wxTextCtrl(panel, 1, "", wxPoint(108, 30));
+	username_in->Bind(wxEVT_TEXT, &Register::set_username, this);
 
 	wxStaticText* password_txt = new wxStaticText(panel, wxID_ANY, "Password", wxPoint(130, 100));
-	password_in = new wxTextCtrl(panel, 2, "", wxPoint(108, 120));
-}
+	password_in = new wxTextCtrl(panel, 2, "", wxPoint(108, 120), wxDefaultSize, wxTE_PASSWORD);
+	password_in->Bind(wxEVT_TEXT, &Register::set_password, this);
+}	
 
 void Register::clear_fields(wxCommandEvent& evt)
 {
@@ -29,13 +34,23 @@ void Register::clear_fields(wxCommandEvent& evt)
 	password_in->Clear();
 }
 
+void Register::set_username(wxCommandEvent& evt) {
+	user_obj.set_username((std::string)evt.GetString());
+	evt.Skip();
+}
+
+void Register::set_password(wxCommandEvent& evt) {
+	user_obj.set_password((std::string)evt.GetString());
+	evt.Skip();
+}
+
 void Register::register_user(wxCommandEvent& evt)
 {
-	Poco::URI uri("http://127.0.0.1:5000/login");
+	Poco::URI uri("http://127.0.0.1:5000/register");
 	try {
 		Poco::JSON::Object::Ptr user = new Poco::JSON::Object;
-		user->set("username", get_username());
-		user->set("password", get_pwd());
+		user->set("username", user_obj.get_username());
+		user->set("password", user_obj.get_password());
 
 		std::ostringstream data;
 		Poco::JSON::Stringifier::stringify(user, data);
