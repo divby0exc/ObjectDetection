@@ -1,6 +1,15 @@
 #include <wx/wx.h>
 #include "MainView.h"
 #include <iostream>
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/opencv.hpp>
+#include <opencv2/dnn.hpp>
+#include <opencv2/dnn/all_layers.hpp>
+
+using namespace cv;
+using namespace dnn;
 // OpenFileDialog for choosing picture to process
 
 // NotificationMessage when a person enters wrong username or pwd
@@ -12,23 +21,6 @@
 // Others > FrameIcon for a custom icon
 
 MainView::MainView(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
-	std::cout << "Starting frame" << std::endl;
-	wxImage img(wxT("IMG-20240211-WA0024.jpg"));
-	std::cout << "Managed to insert pic to wxImage" << std::endl;
-	if (img.IsOk()) {
-		std::cout << "Image seems ok" << std::endl;
-		wxBitmap bitmap(img);
-		std::cout << "Converted imaged to a wxBitmap" << std::endl;
-
-		wxStaticBitmap* static_bit = new wxStaticBitmap(this, wxID_ANY, bitmap);
-
-
-		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-		sizer->Add(static_bit, 1, wxEXPAND | wxALL, 10);
-		SetSizer(sizer);
-	}
-	else
-	{
-		wxMessageBox(wxT("Failed to load image."), wxT("Error"), wxOK | wxICON_ERROR);
-	}
+	Mat img = imread("IMG-20240211-WA0024.jpg");
+	Mat blob = blobFromImage(img, 0.01, Size(224, 224), Scalar(104, 117, 123));
 }
