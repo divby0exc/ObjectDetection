@@ -21,6 +21,36 @@ using namespace dnn;
 // Others > FrameIcon for a custom icon
 
 MainView::MainView(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
-	Mat img = imread("IMG-20240211-WA0024.jpg");
-	Mat blob = blobFromImage(img, 0.01, Size(224, 224), Scalar(104, 117, 123));
+    wxNotebook* notebook = new wxNotebook(this, wxID_ANY);
+
+    ImagePanel* imagePanel = new ImagePanel(notebook);
+    notebook->AddPage(imagePanel, "Image", true);
+
+    WebcamPanel* webcamPanel = new WebcamPanel(notebook);
+    notebook->AddPage(webcamPanel, "Webcam", false);
+
+}
+
+ImagePanel::ImagePanel(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+
+    wxButton* detectButton = new wxButton(this, wxID_ANY, "Start Object Detection");
+    sizer->Add(detectButton, 0, wxALL | wxALIGN_CENTER, 5);
+
+    wxButton* selectImageButton = new wxButton(this, wxID_ANY, "Select Image");
+    sizer->Add(selectImageButton, 0, wxALL | wxALIGN_CENTER, 5);
+
+    SetSizerAndFit(sizer);
+}
+
+WebcamPanel::WebcamPanel(wxWindow * parent) : wxPanel(parent, wxID_ANY) {
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+
+    wxButton* startButton = new wxButton(this, wxID_ANY, "Start Webcam Broadcast");
+    sizer->Add(startButton, 0, wxALL | wxALIGN_CENTER, 5);
+
+    wxButton* stopButton = new wxButton(this, wxID_ANY, "Stop Webcam Broadcast");
+    sizer->Add(stopButton, 0, wxALL | wxALIGN_CENTER, 5);
+
+    SetSizerAndFit(sizer);
 }
