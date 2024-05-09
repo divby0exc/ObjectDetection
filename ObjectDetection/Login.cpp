@@ -38,14 +38,25 @@ Login::Login(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
 
 void Login::set_username(wxCommandEvent& evt)
 {
-	user_obj.set_username((std::string) evt.GetString());
-	evt.Skip();
+	if (evt.GetString().length()) {
+		if (!evt.GetString().length() < 6) {
+			user_obj.set_username((std::string)evt.GetString());
+			evt.Skip();
+			return;
+		}
+	}
+	wxMessageBox("Username too short", "Response: ", wxOK | wxICON_INFORMATION);
 }
 
 void Login::set_pwd(wxCommandEvent& evt)
 {
-	user_obj.set_password((std::string) evt.GetString());
-	evt.Skip();
+	if(evt.GetString().length()){
+		if (!evt.GetString().Length() < 10)
+			user_obj.set_password((std::string)evt.GetString());
+			evt.Skip();
+			return;
+	}
+	wxMessageBox("Password too short", "Response: ", wxOK | wxICON_INFORMATION);
 }
 
 
