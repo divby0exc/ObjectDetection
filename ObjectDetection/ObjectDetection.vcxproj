@@ -153,6 +153,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ImageClass.cpp" />
+    <ClCompile Include="ImageClass.h" />
     <ClCompile Include="Login.cpp" />
     <ClCompile Include="Logout.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -171,6 +173,14 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="IMG-20240211-WA0024.jpg" />
+    <Image Include="sample.jpg" />
+    <Image Include="trafic.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="coco.names" />
+    <None Include="models\yolov5m.onnx" />
+    <None Include="models\yolov5n.onnx" />
+    <None Include="models\yolov5s.onnx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

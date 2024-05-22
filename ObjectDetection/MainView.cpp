@@ -1,15 +1,10 @@
 #include <wx/wx.h>
 #include "MainView.h"
 #include <iostream>
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/opencv.hpp>
-#include <opencv2/dnn.hpp>
-#include <opencv2/dnn/all_layers.hpp>
+
 
 using namespace cv;
-using namespace dnn;
+using namespace cv::dnn;
 // OpenFileDialog for choosing picture to process
 
 // NotificationMessage when a person enters wrong username or pwd
