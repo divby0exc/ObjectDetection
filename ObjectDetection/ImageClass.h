@@ -2,10 +2,10 @@
 #include <fstream>
 
 using namespace cv;
-using namespace std;
 using namespace cv::dnn;
 
 class ImageClass {
+	// Image settings
 	const float INPUT_WIDTH{ 640.0 };
 	const float INPUT_HEIGHT{ 640.0 };
 	const float SCORE_THRESHOLD{ .5 };
@@ -19,20 +19,18 @@ class ImageClass {
 	Scalar BLUE{ Scalar(255,178,50) };
 	Scalar YELLOW{ Scalar(0,255,255) };
 	Scalar RED{ Scalar(0,0,255) };
-	// For model
+	std::vector<std::string> class_list;
+	// Load image.
 	Mat frame;
-	// For model
 	Net net;
-
-	vector<Mat> detections;
-	// After post-process
-	Mat img;
-	// Class list
-	vector<string> class_list;
 public:
 	ImageClass();
 	~ImageClass();
 	void draw_label(Mat& input_image, std::string label, int left, int top);
 	std::vector<Mat> pre_process(Mat& input_image, Net& net);
-	Mat post_process(Mat& input_image, std::vector<Mat>& outputs, const std::vector<std::string>& class_name);
+	Mat post_process(Mat&& input_image, std::vector<Mat>& outputs, const std::vector<std::string>& class_name);
+	std::vector<std::string> get_classes();
+	void set_image(std::string image_uri);
+	Net get_model();
+	Mat get_image();
 };

@@ -1,10 +1,23 @@
 #include <wx/wx.h>
 #include "MainView.h"
 #include <iostream>
+#include "ImageClass.h"
+
+ImageClass model;
+
+// Load model.
 
 
-using namespace cv;
-using namespace cv::dnn;
+vector<Mat> detections;
+detections = pre_process(model.get_image(), model.get_model);
+Mat img = post_process(frame.clone(), detections, class_list);
+vector<double> layersTimes;
+double freq = getTickFrequency() / 1000;
+double t = net.getPerfProfile(layersTimes) / freq;
+string label = format("Inference time : %.2f ms", t);
+putText(img, label, Point(20, 40), FONT_FACE, FONT_SCALE, RED);
+imshow("Output", img);
+waitKey(0);
 // OpenFileDialog for choosing picture to process
 
 // NotificationMessage when a person enters wrong username or pwd

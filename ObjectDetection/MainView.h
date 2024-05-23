@@ -2,6 +2,7 @@
 #include <wx/wx.h>
 #include <opencv2/opencv.hpp>
 #include <wx/aui/auibook.h>
+#include <fstream>
 
 class MainView : public wxFrame {
 public:
