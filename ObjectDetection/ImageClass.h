@@ -1,13 +1,8 @@
-#include <opencv2/core/types.hpp>
 #include <opencv2/opencv.hpp>
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/dnn.hpp>
-#include <opencv2/dnn/all_layers.hpp>
 #include <fstream>
 
 using namespace cv;
+using namespace std;
 using namespace cv::dnn;
 
 class ImageClass {
@@ -24,7 +19,19 @@ class ImageClass {
 	Scalar BLUE{ Scalar(255,178,50) };
 	Scalar YELLOW{ Scalar(0,255,255) };
 	Scalar RED{ Scalar(0,0,255) };
+	// For model
+	Mat frame;
+	// For model
+	Net net;
+
+	vector<Mat> detections;
+	// After post-process
+	Mat img;
+	// Class list
+	vector<string> class_list;
 public:
+	ImageClass();
+	~ImageClass();
 	void draw_label(Mat& input_image, std::string label, int left, int top);
 	std::vector<Mat> pre_process(Mat& input_image, Net& net);
 	Mat post_process(Mat& input_image, std::vector<Mat>& outputs, const std::vector<std::string>& class_name);
