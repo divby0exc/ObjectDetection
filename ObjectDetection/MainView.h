@@ -21,4 +21,5 @@ public:
 class WebcamPanel : public wxPanel {
 public:
     WebcamPanel(wxWindow* parent);
+    void start_detection(wxCommandEvent& evt);
 };

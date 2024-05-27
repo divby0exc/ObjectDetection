@@ -6,17 +6,6 @@
 ImageClass model;
 static std::string filename;
 
-// Load model.
-
-
-// OpenFileDialog for choosing picture to process
-
-// NotificationMessage when a person enters wrong username or pwd
-
-// MessageDialog to present wrong login info and try again or register button after 3 tries?
-
-// GenericProgressDialog to show while detecting objects in the image
-
 // Others > FrameIcon for a custom icon
 
 MainView::MainView(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
@@ -69,17 +58,33 @@ void ImagePanel::start_detection(wxCommandEvent& evt)
 void ImagePanel::save_filename(wxFileDirPickerEvent& evt)
 {
     model.set_image((std::string) evt.GetPath());
-    //std::cout << evt.GetFileName() << std::endl;
 }
 
-WebcamPanel::WebcamPanel(wxWindow * parent) : wxPanel(parent, wxID_ANY) {
+WebcamPanel::WebcamPanel(wxWindow * parent) : wxPanel(parent, wxID_ANY) 
+{
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
-    wxButton* startButton = new wxButton(this, wxID_ANY, "Start Webcam Broadcast");
-    sizer->Add(startButton, 0, wxALL | wxALIGN_CENTER, 5);
-
-    wxButton* stopButton = new wxButton(this, wxID_ANY, "Stop Webcam Broadcast");
-    sizer->Add(stopButton, 0, wxALL | wxALIGN_CENTER, 5);
-
+    wxButton* start_button = new wxButton(this, wxID_ANY, "Start Webcam Broadcast");
+    start_button->Bind(wxEVT_BUTTON, &WebcamPanel::start_detection, this);
+    sizer->Add(start_button, 0, wxALL | wxALIGN_CENTER, 5);
+    
     SetSizerAndFit(sizer);
+}
+
+void WebcamPanel::start_detection(wxCommandEvent& evt)
+{
+    try
+    {
+        VideoCapture(0);
+    }
+    catch (Exception e) {
+        std::cout << e.what() << std::endl;
+    }
+}
+
+AdminPanel::AdminPanel(wxWindow* parent) : wxPanel(parent, wxID_ANY)
+{
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+
+    
 }
