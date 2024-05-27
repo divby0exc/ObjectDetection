@@ -29,7 +29,7 @@ public:
 	ImageClass();
 	~ImageClass();
 	void draw_label(Mat& input_image, std::string label, int left, int top);
-	std::vector<Mat> pre_process(Mat& input_image, Net& net);
+	std::vector<Mat> pre_process(Mat&& input_image, Net&& net);
 	Mat post_process(Mat&& input_image, std::vector<Mat>& outputs, const std::vector<std::string>& class_name);
 	std::vector<std::string> get_classes();
 	void set_image(std::string image_uri);
@@ -43,4 +43,5 @@ public:
 	float get_font_scale();
 	int get_font_face();
 	int get_thickness();
+	Scalar get_red();
 };

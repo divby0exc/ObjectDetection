@@ -15,7 +15,7 @@ class ImagePanel : public wxPanel {
 public:
     ImagePanel(wxWindow* parent);
     void start_detection(wxCommandEvent& evt);
-    void save_filename(wxCommandEvent& evt);
+    void save_filename(wxFileDirPickerEvent& evt);
 };
 
 class WebcamPanel : public wxPanel {

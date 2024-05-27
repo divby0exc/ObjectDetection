@@ -26,7 +26,7 @@ void ImageClass::draw_label(Mat& input_image, std::string label, int left, int t
     // Put the label on the black rectangle.
     putText(input_image, label, Point(left, top + label_size.height), FONT_FACE, FONT_SCALE, YELLOW, THICKNESS);
 }
-std::vector<Mat> ImageClass::pre_process(Mat& input_image, Net& net) 
+std::vector<Mat> ImageClass::pre_process(Mat&& input_image, Net&& net) 
 {
     // Convert to blob.
     Mat blob;
@@ -179,4 +179,9 @@ int ImageClass::get_font_face()
 int ImageClass::get_thickness()
 {
     return THICKNESS;
+}
+
+Scalar ImageClass::get_red()
+{
+    return RED;
 }

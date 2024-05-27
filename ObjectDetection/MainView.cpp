@@ -40,8 +40,8 @@ ImagePanel::ImagePanel(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
     //wxButton* selectImageButton = new wxButton(this, wxID_ANY, "Select Image");
     wxStaticText* select_image_text = new wxStaticText(this, wxID_ANY, "Select image");
     wxFilePickerCtrl* file_picker = new wxFilePickerCtrl(this, wxID_ANY);
-    //file_picker->Bind(wxEVT_TEXT, &ImagePanel::save_filename, this);
-    filename = file_picker->GetPath();
+    file_picker->Bind(wxEVT_FILEPICKER_CHANGED, &ImagePanel::save_filename, this);
+
     sizer->Add(select_image_text, 0, wxALL | wxALIGN_CENTER, 5);
     sizer->Add(file_picker, 0, wxALL | wxALIGN_CENTER, 5);
 
@@ -52,6 +52,7 @@ ImagePanel::ImagePanel(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
 
 void ImagePanel::start_detection(wxCommandEvent& evt)
 {
+    //model.set_image(filename);
     std::vector<Mat> detections;
     detections = model.pre_process(model.get_image(), model.get_model());
 
@@ -60,14 +61,15 @@ void ImagePanel::start_detection(wxCommandEvent& evt)
     double freq = getTickFrequency() / 1000;
     double t = model.get_model().getPerfProfile(layersTimes) / freq;
     std::string label = format("Inference time : %.2f ms", t);
-    putText(img, label, Point(20, 40), ImagePanel::FONT_FACE, FONT_SCALE, RED);
+    putText(img, label, Point(20, 40), model.get_font_face(), model.get_font_scale(), model.get_red());
     imshow("Output", img);
     waitKey(0);
 }
 
-void ImagePanel::save_filename(wxCommandEvent& evt)
+void ImagePanel::save_filename(wxFileDirPickerEvent& evt)
 {
-    //filename = evt.GetString();
+    model.set_image((std::string) evt.GetPath());
+    //std::cout << evt.GetFileName() << std::endl;
 }
 
 WebcamPanel::WebcamPanel(wxWindow * parent) : wxPanel(parent, wxID_ANY) {
