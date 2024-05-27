@@ -23,3 +23,12 @@ public:
     WebcamPanel(wxWindow* parent);
     void start_detection(wxCommandEvent& evt);
 };
+
+class AdminPanel : public wxPanel {
+public:
+    AdminPanel(wxWindow* parent);
+    void change_password(wxCommandEvent& evt);
+    void delete_user(wxCommandEvent& evt);
+
+
+};
