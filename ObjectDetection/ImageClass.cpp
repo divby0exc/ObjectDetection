@@ -140,3 +140,43 @@ Mat ImageClass::get_image()
 {
     return frame;
 }
+
+float ImageClass::get_input_width()
+{
+    return INPUT_WIDTH;
+}
+
+float ImageClass::get_input_height()
+{
+    return INPUT_HEIGHT;
+}
+
+float ImageClass::get_score_threshold()
+{
+    return SCORE_THRESHOLD;
+}
+
+float ImageClass::get_nms_threshold()
+{
+    return NMS_THRESHOLD;
+}
+
+float ImageClass::get_confidence_threshold()
+{
+    return CONFIDENCE_THRESHOLD;
+}
+
+float ImageClass::get_font_scale()
+{
+    return FONT_SCALE;
+}
+
+int ImageClass::get_font_face()
+{
+    return FONT_FACE;
+}
+
+int ImageClass::get_thickness()
+{
+    return THICKNESS;
+}

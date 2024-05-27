@@ -1,3 +1,4 @@
+#pragma once
 #include <opencv2/opencv.hpp>
 #include <fstream>
 
@@ -12,9 +13,10 @@ class ImageClass {
 	const float NMS_THRESHOLD{ .45 };
 	const float CONFIDENCE_THRESHOLD{ .45 };
 	// Text settings
-	const float FONT_SCALE{ .7 };
+	const float FONT_SCALE = .7;
 	const int FONT_FACE = FONT_HERSHEY_SIMPLEX;
 	const int THICKNESS{ 1 };
+	//
 	Scalar BLACK{ Scalar(0,0,0) };
 	Scalar BLUE{ Scalar(255,178,50) };
 	Scalar YELLOW{ Scalar(0,255,255) };
@@ -33,4 +35,12 @@ public:
 	void set_image(std::string image_uri);
 	Net get_model();
 	Mat get_image();
+	float get_input_width();
+	float get_input_height();
+	float get_score_threshold();
+	float get_nms_threshold();
+	float get_confidence_threshold();
+	float get_font_scale();
+	int get_font_face();
+	int get_thickness();
 };

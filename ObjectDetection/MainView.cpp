@@ -4,20 +4,11 @@
 #include "ImageClass.h"
 
 ImageClass model;
+static std::string filename;
 
 // Load model.
 
 
-vector<Mat> detections;
-detections = pre_process(model.get_image(), model.get_model);
-Mat img = post_process(frame.clone(), detections, class_list);
-vector<double> layersTimes;
-double freq = getTickFrequency() / 1000;
-double t = net.getPerfProfile(layersTimes) / freq;
-string label = format("Inference time : %.2f ms", t);
-putText(img, label, Point(20, 40), FONT_FACE, FONT_SCALE, RED);
-imshow("Output", img);
-waitKey(0);
 // OpenFileDialog for choosing picture to process
 
 // NotificationMessage when a person enters wrong username or pwd
@@ -42,13 +33,41 @@ MainView::MainView(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
 ImagePanel::ImagePanel(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
-    wxButton* detectButton = new wxButton(this, wxID_ANY, "Start Object Detection");
-    sizer->Add(detectButton, 0, wxALL | wxALIGN_CENTER, 5);
+    wxButton* detect_button = new wxButton(this, wxID_ANY, "Start Object Detection");
+    sizer->Add(detect_button, 0, wxALL | wxALIGN_CENTER, 5);
+    detect_button->Bind(wxEVT_BUTTON, &ImagePanel::start_detection, this);
 
-    wxButton* selectImageButton = new wxButton(this, wxID_ANY, "Select Image");
-    sizer->Add(selectImageButton, 0, wxALL | wxALIGN_CENTER, 5);
+    //wxButton* selectImageButton = new wxButton(this, wxID_ANY, "Select Image");
+    wxStaticText* select_image_text = new wxStaticText(this, wxID_ANY, "Select image");
+    wxFilePickerCtrl* file_picker = new wxFilePickerCtrl(this, wxID_ANY);
+    //file_picker->Bind(wxEVT_TEXT, &ImagePanel::save_filename, this);
+    filename = file_picker->GetPath();
+    sizer->Add(select_image_text, 0, wxALL | wxALIGN_CENTER, 5);
+    sizer->Add(file_picker, 0, wxALL | wxALIGN_CENTER, 5);
 
     SetSizerAndFit(sizer);
+
+    
+}
+
+void ImagePanel::start_detection(wxCommandEvent& evt)
+{
+    std::vector<Mat> detections;
+    detections = model.pre_process(model.get_image(), model.get_model());
+
+    Mat img = model.post_process(model.get_image().clone(), detections, model.get_classes());
+    std::vector<double> layersTimes;
+    double freq = getTickFrequency() / 1000;
+    double t = model.get_model().getPerfProfile(layersTimes) / freq;
+    std::string label = format("Inference time : %.2f ms", t);
+    putText(img, label, Point(20, 40), ImagePanel::FONT_FACE, FONT_SCALE, RED);
+    imshow("Output", img);
+    waitKey(0);
+}
+
+void ImagePanel::save_filename(wxCommandEvent& evt)
+{
+    //filename = evt.GetString();
 }
 
 WebcamPanel::WebcamPanel(wxWindow * parent) : wxPanel(parent, wxID_ANY) {

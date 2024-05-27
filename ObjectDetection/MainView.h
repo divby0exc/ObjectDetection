@@ -3,6 +3,7 @@
 #include <opencv2/opencv.hpp>
 #include <wx/aui/auibook.h>
 #include <fstream>
+#include <wx/filepicker.h>
 
 class MainView : public wxFrame {
 public:
@@ -13,6 +14,8 @@ public:
 class ImagePanel : public wxPanel {
 public:
     ImagePanel(wxWindow* parent);
+    void start_detection(wxCommandEvent& evt);
+    void save_filename(wxCommandEvent& evt);
 };
 
 class WebcamPanel : public wxPanel {

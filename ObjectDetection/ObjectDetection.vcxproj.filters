@@ -79,5 +79,7 @@
     <None Include="models\yolov5n.onnx" />
     <None Include="models\yolov5s.onnx" />
     <None Include="coco.names" />
+    <None Include="models\yolov8m.onnx" />
+    <None Include="coco8.yaml" />
   </ItemGroup>
 </Project>

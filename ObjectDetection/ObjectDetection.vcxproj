@@ -178,9 +178,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="coco.names" />
+    <None Include="coco8.yaml" />
     <None Include="models\yolov5m.onnx" />
     <None Include="models\yolov5n.onnx" />
     <None Include="models\yolov5s.onnx" />
+    <None Include="models\yolov8m.onnx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
