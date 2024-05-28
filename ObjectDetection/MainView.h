@@ -4,6 +4,7 @@
 #include <wx/aui/auibook.h>
 #include <fstream>
 #include <wx/filepicker.h>
+#include "User.h"
 
 class MainView : public wxFrame {
 public:
@@ -29,6 +30,7 @@ public:
     AdminPanel(wxWindow* parent);
     void change_password(wxCommandEvent& evt);
     void delete_user(wxCommandEvent& evt);
+    std::vector<User> get_users();
 
 
 };

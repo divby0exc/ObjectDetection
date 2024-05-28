@@ -88,3 +88,16 @@ AdminPanel::AdminPanel(wxWindow* parent) : wxPanel(parent, wxID_ANY)
 
     
 }
+
+void AdminPanel::change_password(wxCommandEvent& evt)
+{
+}
+
+void AdminPanel::delete_user(wxCommandEvent& evt)
+{
+}
+
+std::vector<User> AdminPanel::get_users()
+{
+    return std::vector<User>();
+}
