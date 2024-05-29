@@ -38,6 +38,7 @@ class UserPanel : public wxPanel {
     std::string old_pwd;
     std::string new_pwd;
     std::string re_pwd;
+    int session_time;
 public:
     UserPanel(wxWindow* parent);
     void change_pwd(wxCommandEvent& evt);
@@ -45,7 +46,8 @@ public:
     void set_new_pwd(wxCommandEvent& evt);
     void set_re_pwd(wxCommandEvent& evt);
     void set_username(wxCommandEvent& evt);
+    void set_session_time(int time);
     void delete_my_acc(wxCommandEvent& evt);
     bool is_pwd_same();
-    bool is_old_pwd();
+    bool is_user();
 };

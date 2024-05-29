@@ -96,16 +96,21 @@ void Login::show_shit(wxCommandEvent& evt) {
 
 		wxString json_str(oss.str());
 
+
 		// need to find out how to extract the keys in best way
-		if (json_str.find("true")) {
-			// Save the seconds in a thread or something to keep track to logout
-			MainView* main_view = new MainView("Object Detection");
-			main_view->SetClientSize(300, 300);
-			main_view->Center();
-			main_view->Show();
-			this->Close();
+		if (obj->has("correct")) {
+			bool is_correct = obj->getValue<bool>("correct");
+			if (is_correct)
+			{
+				// Save the seconds in a thread or something to keep track to logout
+				MainView* main_view = new MainView("Object Detection");
+				main_view->SetClientSize(300, 300);
+				main_view->Center();
+				main_view->Show();
+				this->Close();
+			}
 			// Awful solution but works because of the demand of sending/receiving json str
-		} else wxMessageBox(json_str.substr(json_str.find("Username"), 33), "Response: ", wxOK | wxICON_INFORMATION);
+		} else wxMessageBox(obj->getValue<std::string>("Message"), "Response: ", wxOK | wxICON_INFORMATION);
 	}
 	catch (Poco::Exception& ex) {
 		wxMessageBox("Poco Exception: " + ex.displayText());

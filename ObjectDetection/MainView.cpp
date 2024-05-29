@@ -2,6 +2,13 @@
 #include "MainView.h"
 #include <iostream>
 #include "ImageClass.h"
+#include <Poco/Net/HTTPClientSession.h>
+#include <Poco/Net/HTTPRequest.h>
+#include <Poco/Net/HTTPResponse.h>
+#include <Poco/URI.h>
+#include <Poco/StreamCopier.h>
+#include <Poco/Exception.h>
+#include <Poco/JSON/Parser.h>
 
 ImageClass model;
 static std::string filename;
@@ -14,8 +21,8 @@ MainView::MainView(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
 	ImagePanel* image_panel = new ImagePanel(notebook);
 	notebook->AddPage(image_panel, "Image", true);
 
-	WebcamPanel* webcam_panel = new WebcamPanel(notebook);
-	notebook->AddPage(webcam_panel, "Webcam", false);
+	/*WebcamPanel* webcam_panel = new WebcamPanel(notebook);
+	notebook->AddPage(webcam_panel, "Webcam", false);*/
 
 	UserPanel* user_panel = new UserPanel(notebook);
 	notebook->AddPage(user_panel, "Profile", false);
@@ -136,7 +143,53 @@ UserPanel::UserPanel(wxWindow* parent) : wxPanel(parent, wxID_ANY)
 
 void UserPanel::change_pwd(wxCommandEvent& evt)
 {
-	wxMessageBox(is_pwd_same()==1 ? "Password is same" : "Password does not match", "Response: ", wxOK | wxICON_INFORMATION);
+	if (!is_user()) { wxMessageBox("Username or Password is incorrect", "Error: ", wxOK | wxICON_INFORMATION); return; };
+	
+	if(is_user() && is_pwd_same())
+	{
+		Poco::URI uri("http://127.0.0.1:5000/change_pwd");
+		try {
+			Poco::JSON::Object::Ptr user = new Poco::JSON::Object;
+			user->set("username", username);
+			user->set("password", new_pwd);
+
+			std::ostringstream data;
+			Poco::JSON::Stringifier::stringify(user, data);
+			std::string json_data = data.str();
+
+			Poco::Net::HTTPClientSession sess(uri.getHost(), uri.getPort());
+			Poco::Net::HTTPRequest req(Poco::Net::HTTPRequest::HTTP_PUT, uri.getPathAndQuery(), Poco::Net::HTTPMessage::HTTP_1_1);
+			req.setContentType("application/json");
+			req.setContentLength(json_data.length());
+
+			std::ostream& req_stream = sess.sendRequest(req);
+			req_stream << json_data;
+
+			Poco::Net::HTTPResponse res;
+			std::istream& res_stream = sess.receiveResponse(res);
+
+			std::stringstream ss;
+			Poco::StreamCopier::copyStream(res_stream, ss);
+			std::string res_data = ss.str();
+
+			Poco::JSON::Parser parser;
+			Poco::Dynamic::Var json_res = parser.parse(res_data);
+			Poco::JSON::Object::Ptr obj = json_res.extract<Poco::JSON::Object::Ptr>();
+
+			std::ostringstream oss;
+			obj->stringify(oss);
+
+
+			wxString json_str(oss.str());
+
+			// need to find out how to extract the keys in best way
+			wxString response_req = obj->getValue<std::string>("Msg");
+			wxMessageBox(response_req, "Response: ", wxOK | wxICON_INFORMATION);
+		}
+		catch (Poco::Exception& ex) {
+			wxMessageBox("Poco Exception: " + ex.displayText());
+		}
+	}
 }
 
 void UserPanel::set_old_pwd(wxCommandEvent& evt)
@@ -162,6 +215,11 @@ void UserPanel::set_username(wxCommandEvent& evt)
 	username = evt.GetString();
 }
 
+void UserPanel::set_session_time(int time)
+{
+	session_time = time;
+}
+
 void UserPanel::delete_my_acc(wxCommandEvent& evt)
 {
 
@@ -172,7 +230,50 @@ bool UserPanel::is_pwd_same()
 	return (new_pwd == re_pwd);
 }
 
-bool UserPanel::is_old_pwd()
+bool UserPanel::is_user()
 {
-	// Call API to check if old pwd is correct or not then proceed to change the password IF the new and re_pwd is the same
+	Poco::URI uri("http://127.0.0.1:5000/login");
+	try {
+		Poco::JSON::Object::Ptr user = new Poco::JSON::Object;
+		user->set("username", username);
+		user->set("password", old_pwd);
+
+		std::ostringstream data;
+		Poco::JSON::Stringifier::stringify(user, data);
+		std::string json_data = data.str();
+
+		Poco::Net::HTTPClientSession sess(uri.getHost(), uri.getPort());
+		Poco::Net::HTTPRequest req(Poco::Net::HTTPRequest::HTTP_POST, uri.getPathAndQuery(), Poco::Net::HTTPMessage::HTTP_1_1);
+		req.setContentType("application/json");
+		req.setContentLength(json_data.length());
+
+		std::ostream& req_stream = sess.sendRequest(req);
+		req_stream << json_data;
+
+		Poco::Net::HTTPResponse res;
+		std::istream& res_stream = sess.receiveResponse(res);
+
+		std::stringstream ss;
+		Poco::StreamCopier::copyStream(res_stream, ss);
+		std::string res_data = ss.str();
+
+		Poco::JSON::Parser parser;
+		Poco::Dynamic::Var json_res = parser.parse(res_data);
+		Poco::JSON::Object::Ptr obj = json_res.extract<Poco::JSON::Object::Ptr>();
+
+		std::ostringstream oss;
+		obj->stringify(oss);
+
+
+		wxString json_str(oss.str());
+
+		// need to find out how to extract the keys in best way
+		if (obj->has("time")) {
+			return true;
+		}
+		else return false;
+	}
+	catch (Poco::Exception& ex) {
+		wxMessageBox("Poco Exception: " + ex.displayText());
+	}
 }
