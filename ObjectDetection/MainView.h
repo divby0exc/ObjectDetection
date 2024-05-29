@@ -34,14 +34,18 @@ public:
 };
 
 class UserPanel : public wxPanel {
-    bool is_change_pwd = false;
-    wxString old_pwd;
-    wxString new_pwd;
-    wxString re_pwd;
+    std::string username;
+    std::string old_pwd;
+    std::string new_pwd;
+    std::string re_pwd;
 public:
     UserPanel(wxWindow* parent);
-    User fetch_user();
     void change_pwd(wxCommandEvent& evt);
-    void set_pwd_flag(wxCommandEvent& evt);
-    bool get_pwd_flag();
+    void set_old_pwd(wxCommandEvent& evt);
+    void set_new_pwd(wxCommandEvent& evt);
+    void set_re_pwd(wxCommandEvent& evt);
+    void set_username(wxCommandEvent& evt);
+    void delete_my_acc(wxCommandEvent& evt);
+    bool is_pwd_same();
+    bool is_old_pwd();
 };
