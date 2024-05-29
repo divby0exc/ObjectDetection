@@ -11,11 +11,14 @@ static std::string filename;
 MainView::MainView(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) {
     wxNotebook* notebook = new wxNotebook(this, wxID_ANY);
 
-    ImagePanel* imagePanel = new ImagePanel(notebook);
-    notebook->AddPage(imagePanel, "Image", true);
+    ImagePanel* image_panel = new ImagePanel(notebook);
+    notebook->AddPage(image_panel, "Image", true);
 
-    WebcamPanel* webcamPanel = new WebcamPanel(notebook);
-    notebook->AddPage(webcamPanel, "Webcam", false);
+    WebcamPanel* webcam_panel = new WebcamPanel(notebook);
+    notebook->AddPage(webcam_panel, "Webcam", false);
+
+    UserPanel* user_panel = new UserPanel(notebook);
+    notebook->AddPage(user_panel, "Profile", false);
 
 }
 
@@ -41,7 +44,10 @@ ImagePanel::ImagePanel(wxWindow* parent) : wxPanel(parent, wxID_ANY) {
 
 void ImagePanel::start_detection(wxCommandEvent& evt)
 {
-    //model.set_image(filename);
+    if (model.get_image().empty()) {
+        wxMessageBox("Please choose an image first", "Warning: ", wxOK | wxICON_INFORMATION);
+        return;
+    }
     std::vector<Mat> detections;
     detections = model.pre_process(model.get_image(), model.get_model());
 
@@ -89,15 +95,35 @@ AdminPanel::AdminPanel(wxWindow* parent) : wxPanel(parent, wxID_ANY)
     
 }
 
-void AdminPanel::change_password(wxCommandEvent& evt)
+UserPanel::UserPanel(wxWindow* parent) : wxPanel(parent, wxID_ANY)
 {
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+
+    wxButton* change_pwd = new wxButton(this, wxID_ANY, "Change password");
+    change_pwd->Bind(wxEVT_BUTTON, &UserPanel::set_pwd_flag, this);
+    sizer->Add(change_pwd, 0, wxALL | wxALIGN_CENTER, 5);
+
+    if (get_pwd_flag())
+    {
+        wxTextCtrl* username = new wxTextCtrl(this, wxID_ANY, "Username");
+        wxTextCtrl* old_pwd = new wxTextCtrl(this, wxID_ANY, "Old password");
+        wxTextCtrl* new_pwd = new wxTextCtrl(this, wxID_ANY, "New password");
+        wxTextCtrl* re_pwd = new wxTextCtrl(this, wxID_ANY, "Re-type password");
+        sizer->Add(username, 0, wxALL | wxALIGN_CENTER, 5);
+        sizer->Add(old_pwd, 0, wxALL | wxALIGN_CENTER, 5);
+        sizer->Add(new_pwd, 0, wxALL | wxALIGN_CENTER, 5);
+        sizer->Add(re_pwd, 0, wxALL | wxALIGN_CENTER, 5);
+    }
+
+
 }
 
-void AdminPanel::delete_user(wxCommandEvent& evt)
+void UserPanel::set_pwd_flag(wxCommandEvent& evt)
 {
+    is_change_pwd = true;
 }
 
-std::vector<User> AdminPanel::get_users()
+bool UserPanel::get_pwd_flag()
 {
-    return std::vector<User>();
+    return is_change_pwd;
 }

@@ -31,6 +31,17 @@ public:
     void change_password(wxCommandEvent& evt);
     void delete_user(wxCommandEvent& evt);
     std::vector<User> get_users();
+};
 
-
+class UserPanel : public wxPanel {
+    bool is_change_pwd = false;
+    wxString old_pwd;
+    wxString new_pwd;
+    wxString re_pwd;
+public:
+    UserPanel(wxWindow* parent);
+    User fetch_user();
+    void change_pwd(wxCommandEvent& evt);
+    void set_pwd_flag(wxCommandEvent& evt);
+    bool get_pwd_flag();
 };

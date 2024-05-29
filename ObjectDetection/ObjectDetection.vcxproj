@@ -172,7 +172,6 @@
     <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="IMG-20240211-WA0024.jpg" />
     <Image Include="sample.jpg" />
     <Image Include="trafic.jpg" />
   </ItemGroup>
