@@ -191,7 +191,8 @@ void UserPanel::change_pwd(wxCommandEvent& evt)
 			wxString response_req = obj->getValue<std::string>("Msg");
 			wxMessageBox(response_req, "Response: ", wxOK | wxICON_INFORMATION);
 		}
-		catch (Poco::Exception& ex) {
+		catch (Poco::Exception& ex)
+		{
 			wxMessageBox("Poco Exception: " + ex.displayText());
 		}
 	}
@@ -232,64 +233,61 @@ void UserPanel::set_session_time(int time)
 void UserPanel::delete_my_acc(wxCommandEvent& evt)
 {
 	wxTextEntryDialog* username = new wxTextEntryDialog(this, "Enter username", "Delete account");
-	username->ShowModal();
 	wxPasswordEntryDialog* password = new wxPasswordEntryDialog(this, "Enter password", "Delete account");
-	password->ShowModal();
+	if (username->ShowModal() == wxID_OK && password->ShowModal() == wxID_OK)
+	{
+		Poco::URI uri("http://127.0.0.1:5000/delete_acc");
+		try
+		{
+			Poco::JSON::Object::Ptr user = new Poco::JSON::Object;
+			user->set("username", (std::string)username->GetValue());
+			user->set("password", (std::string)password->GetValue());
+
+			std::ostringstream data;
+			Poco::JSON::Stringifier::stringify(user, data);
+			std::string json_data = data.str();
+
+			Poco::Net::HTTPClientSession sess(uri.getHost(), uri.getPort());
+			Poco::Net::HTTPRequest req(Poco::Net::HTTPRequest::HTTP_DELETE, uri.getPathAndQuery(), Poco::Net::HTTPMessage::HTTP_1_1);
+			req.setContentType("application/json");
+			req.setContentLength(json_data.length());
+
+			std::ostream& req_stream = sess.sendRequest(req);
+			req_stream << json_data;
+
+			Poco::Net::HTTPResponse res;
+			std::istream& res_stream = sess.receiveResponse(res);
+
+			std::stringstream ss;
+			Poco::StreamCopier::copyStream(res_stream, ss);
+			std::string res_data = ss.str();
+
+			Poco::JSON::Parser parser;
+			Poco::Dynamic::Var json_res = parser.parse(res_data);
+			Poco::JSON::Object::Ptr obj = json_res.extract<Poco::JSON::Object::Ptr>();
+
+			std::ostringstream oss;
+			obj->stringify(oss);
 
 
-	Poco::URI uri("http://127.0.0.1:5000/delete_acc");
-	try {
-		Poco::JSON::Object::Ptr user = new Poco::JSON::Object;
-		user->set("username", (std::string)username->GetValue());
-		user->set("password", (std::string)password->GetValue());
+			wxString json_str(oss.str());
 
-		std::ostringstream data;
-		Poco::JSON::Stringifier::stringify(user, data);
-		std::string json_data = data.str();
+			// need to find out how to extract the keys in best way
+			wxString response_req = obj->getValue<std::string>("Msg");
+			wxMessageBox(response_req, "Response: ", wxOK | wxICON_INFORMATION);
 
-		Poco::Net::HTTPClientSession sess(uri.getHost(), uri.getPort());
-		Poco::Net::HTTPRequest req(Poco::Net::HTTPRequest::HTTP_DELETE, uri.getPathAndQuery(), Poco::Net::HTTPMessage::HTTP_1_1);
-		req.setContentType("application/json");
-		req.setContentLength(json_data.length());
+			Login* login = new Login("Login");
+			login->SetClientSize(300, 300);
+			login->Center();
+			login->Show();
+			this->GetGrandParent()->Close();
 
-		std::ostream& req_stream = sess.sendRequest(req);
-		req_stream << json_data;
-
-		Poco::Net::HTTPResponse res;
-		std::istream& res_stream = sess.receiveResponse(res);
-
-		std::stringstream ss;
-		Poco::StreamCopier::copyStream(res_stream, ss);
-		std::string res_data = ss.str();
-
-		Poco::JSON::Parser parser;
-		Poco::Dynamic::Var json_res = parser.parse(res_data);
-		Poco::JSON::Object::Ptr obj = json_res.extract<Poco::JSON::Object::Ptr>();
-
-		std::ostringstream oss;
-		obj->stringify(oss);
-
-
-		wxString json_str(oss.str());
-
-		// need to find out how to extract the keys in best way
-		wxString response_req = obj->getValue<std::string>("Msg");
-		wxMessageBox(response_req, "Response: ", wxOK | wxICON_INFORMATION);
-
-		Login* login = new Login("Login");
-		login->SetClientSize(300, 300);
-		login->Center();
-		login->Show();
-		this->GetGrandParent()->Close();
-
+		}
+		catch (Poco::Exception& ex)
+		{
+			wxMessageBox("Poco Exception: " + ex.displayText());
+		}
 	}
-	catch (Poco::Exception& ex) {
-		wxMessageBox("Poco Exception: " + ex.displayText());
-	}
-
-
-
-
 }
 
 bool UserPanel::is_pwd_same()
@@ -300,7 +298,8 @@ bool UserPanel::is_pwd_same()
 bool UserPanel::is_user()
 {
 	Poco::URI uri("http://127.0.0.1:5000/login");
-	try {
+	try
+	{
 		Poco::JSON::Object::Ptr user = new Poco::JSON::Object;
 		user->set("username", username);
 		user->set("password", old_pwd);
@@ -335,12 +334,14 @@ bool UserPanel::is_user()
 		wxString json_str(oss.str());
 
 		// need to find out how to extract the keys in best way
-		if (obj->has("time")) {
+		if (obj->has("time"))
+		{
 			return true;
 		}
 		else return false;
 	}
-	catch (Poco::Exception& ex) {
+	catch (Poco::Exception& ex)
+	{
 		wxMessageBox("Poco Exception: " + ex.displayText());
 	}
 }
