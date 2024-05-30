@@ -5,6 +5,7 @@
 #include <fstream>
 #include <wx/filepicker.h>
 #include "User.h"
+#include <wx/aboutdlg.h> 
 
 class MainView : public wxFrame {
 public:

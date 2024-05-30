@@ -9,6 +9,7 @@
 #include <Poco/StreamCopier.h>
 #include <Poco/Exception.h>
 #include <Poco/JSON/Parser.h>
+#include "Login.h"
 
 ImageClass model;
 static std::string filename;
@@ -112,14 +113,14 @@ UserPanel::UserPanel(wxWindow* parent) : wxPanel(parent, wxID_ANY)
 	wxTextCtrl* username = new wxTextCtrl(this, wxID_ANY, "");
 	username->Bind(wxEVT_TEXT, &UserPanel::set_username, this);
 	sizer->Add(username, 0, wxALL | wxALIGN_CENTER, 5);
-	
+
 	wxStaticText* old_pwd_txt = new wxStaticText(this, wxID_ANY, "Old password");
 	sizer->Add(old_pwd_txt, 0, wxALL | wxALIGN_CENTER, 5);
 
 	wxTextCtrl* old_pwd = new wxTextCtrl(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
 	old_pwd->Bind(wxEVT_TEXT, &UserPanel::set_old_pwd, this);
 	sizer->Add(old_pwd, 0, wxALL | wxALIGN_CENTER, 5);
-	
+
 	wxStaticText* new_pwd_txt = new wxStaticText(this, wxID_ANY, "New password");
 	sizer->Add(new_pwd_txt, 0, wxALL | wxALIGN_CENTER, 5);
 
@@ -139,8 +140,8 @@ UserPanel::UserPanel(wxWindow* parent) : wxPanel(parent, wxID_ANY)
 	sizer->Add(change_pwd, 0, wxALL | wxALIGN_LEFT);
 	wxButton* delete_btn = new wxButton(this, wxID_ANY, "Delete account");
 	delete_btn->Bind(wxEVT_BUTTON, &UserPanel::delete_my_acc, this);
-	sizer->Insert(0, delete_btn, 0, wxALL|wxALIGN_RIGHT);
-	
+	sizer->Insert(0, delete_btn, 0, wxALL | wxALIGN_RIGHT);
+
 
 	SetSizerAndFit(sizer);
 }
@@ -148,8 +149,8 @@ UserPanel::UserPanel(wxWindow* parent) : wxPanel(parent, wxID_ANY)
 void UserPanel::change_pwd(wxCommandEvent& evt)
 {
 	if (!is_user()) { wxMessageBox("Username or Password is incorrect", "Error: ", wxOK | wxICON_INFORMATION); return; };
-	
-	if(is_user() && is_pwd_same())
+
+	if (is_user() && is_pwd_same())
 	{
 		Poco::URI uri("http://127.0.0.1:5000/change_pwd");
 		try {
@@ -198,7 +199,7 @@ void UserPanel::change_pwd(wxCommandEvent& evt)
 
 void UserPanel::set_old_pwd(wxCommandEvent& evt)
 {
-	if(!evt.GetString().empty())
+	if (!evt.GetString().empty())
 		old_pwd = evt.GetString();
 	evt.Skip();
 }
@@ -230,6 +231,64 @@ void UserPanel::set_session_time(int time)
 
 void UserPanel::delete_my_acc(wxCommandEvent& evt)
 {
+	wxTextEntryDialog* username = new wxTextEntryDialog(this, "Enter username", "Delete account");
+	username->ShowModal();
+	wxPasswordEntryDialog* password = new wxPasswordEntryDialog(this, "Enter password", "Delete account");
+	password->ShowModal();
+
+
+	Poco::URI uri("http://127.0.0.1:5000/delete_acc");
+	try {
+		Poco::JSON::Object::Ptr user = new Poco::JSON::Object;
+		user->set("username", (std::string)username->GetValue());
+		user->set("password", (std::string)password->GetValue());
+
+		std::ostringstream data;
+		Poco::JSON::Stringifier::stringify(user, data);
+		std::string json_data = data.str();
+
+		Poco::Net::HTTPClientSession sess(uri.getHost(), uri.getPort());
+		Poco::Net::HTTPRequest req(Poco::Net::HTTPRequest::HTTP_DELETE, uri.getPathAndQuery(), Poco::Net::HTTPMessage::HTTP_1_1);
+		req.setContentType("application/json");
+		req.setContentLength(json_data.length());
+
+		std::ostream& req_stream = sess.sendRequest(req);
+		req_stream << json_data;
+
+		Poco::Net::HTTPResponse res;
+		std::istream& res_stream = sess.receiveResponse(res);
+
+		std::stringstream ss;
+		Poco::StreamCopier::copyStream(res_stream, ss);
+		std::string res_data = ss.str();
+
+		Poco::JSON::Parser parser;
+		Poco::Dynamic::Var json_res = parser.parse(res_data);
+		Poco::JSON::Object::Ptr obj = json_res.extract<Poco::JSON::Object::Ptr>();
+
+		std::ostringstream oss;
+		obj->stringify(oss);
+
+
+		wxString json_str(oss.str());
+
+		// need to find out how to extract the keys in best way
+		wxString response_req = obj->getValue<std::string>("Msg");
+		wxMessageBox(response_req, "Response: ", wxOK | wxICON_INFORMATION);
+
+		Login* login = new Login("Login");
+		login->SetClientSize(300, 300);
+		login->Center();
+		login->Show();
+		this->GetGrandParent()->Close();
+
+	}
+	catch (Poco::Exception& ex) {
+		wxMessageBox("Poco Exception: " + ex.displayText());
+	}
+
+
+
 
 }
 
