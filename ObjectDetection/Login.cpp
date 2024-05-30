@@ -104,7 +104,7 @@ void Login::show_shit(wxCommandEvent& evt) {
 			{
 				// Save the seconds in a thread or something to keep track to logout
 				MainView* main_view = new MainView("Object Detection");
-				main_view->SetClientSize(300, 300);
+				main_view->SetClientSize(300, 350);
 				main_view->Center();
 				main_view->Show();
 				this->Close();

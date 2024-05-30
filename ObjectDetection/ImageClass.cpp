@@ -9,6 +9,7 @@ ImageClass::ImageClass()
         class_list.push_back(line);
     }
     net = readNet("models/yolov5s.onnx");
+    //net = readNet("models/yolov8m.onnx")
 };
 ImageClass::~ImageClass() {};
 void ImageClass::draw_label(Mat& input_image, std::string label, int left, int top) 

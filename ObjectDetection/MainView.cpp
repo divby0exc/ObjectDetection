@@ -59,9 +59,9 @@ void ImagePanel::start_detection(wxCommandEvent& evt)
 	detections = model.pre_process(model.get_image(), model.get_model());
 
 	Mat img = model.post_process(model.get_image().clone(), detections, model.get_classes());
-	std::vector<double> layersTimes;
+	std::vector<double> layers_times;
 	double freq = getTickFrequency() / 1000;
-	double t = model.get_model().getPerfProfile(layersTimes) / freq;
+	double t = model.get_model().getPerfProfile(layers_times) / freq;
 	std::string label = format("Inference time : %.2f ms", t);
 	putText(img, label, Point(20, 40), model.get_font_face(), model.get_font_scale(), model.get_red());
 	imshow("Output", img);
@@ -136,7 +136,11 @@ UserPanel::UserPanel(wxWindow* parent) : wxPanel(parent, wxID_ANY)
 
 	wxButton* change_pwd = new wxButton(this, wxID_ANY, "Change password");
 	change_pwd->Bind(wxEVT_BUTTON, &UserPanel::change_pwd, this);
-	sizer->Add(change_pwd, 0, wxALL | wxALIGN_CENTER, 5);
+	sizer->Add(change_pwd, 0, wxALL | wxALIGN_LEFT);
+	wxButton* delete_btn = new wxButton(this, wxID_ANY, "Delete account");
+	delete_btn->Bind(wxEVT_BUTTON, &UserPanel::delete_my_acc, this);
+	sizer->Insert(0, delete_btn, 0, wxALL|wxALIGN_RIGHT);
+	
 
 	SetSizerAndFit(sizer);
 }
@@ -194,25 +198,29 @@ void UserPanel::change_pwd(wxCommandEvent& evt)
 
 void UserPanel::set_old_pwd(wxCommandEvent& evt)
 {
-	old_pwd = evt.GetString();
+	if(!evt.GetString().empty())
+		old_pwd = evt.GetString();
 	evt.Skip();
 }
 
 void UserPanel::set_new_pwd(wxCommandEvent& evt)
 {
-	new_pwd = evt.GetString();
+	if (!evt.GetString().empty())
+		new_pwd = evt.GetString();
 	evt.Skip();
 }
 
 void UserPanel::set_re_pwd(wxCommandEvent& evt)
 {
-	re_pwd = evt.GetString();
+	if (!evt.GetString().empty())
+		re_pwd = evt.GetString();
 	evt.Skip();
 }
 
 void UserPanel::set_username(wxCommandEvent& evt)
 {
-	username = evt.GetString();
+	if (!evt.GetString().empty())
+		username = evt.GetString();
 }
 
 void UserPanel::set_session_time(int time)
