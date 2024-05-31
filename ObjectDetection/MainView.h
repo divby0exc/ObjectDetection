@@ -18,6 +18,7 @@ public:
     ImagePanel(wxWindow* parent);
     void start_detection(wxCommandEvent& evt);
     void save_filename(wxFileDirPickerEvent& evt);
+    void logout(wxCommandEvent& evt);
 };
 
 class WebcamPanel : public wxPanel {
@@ -51,4 +52,5 @@ public:
     void delete_my_acc(wxCommandEvent& evt);
     bool is_pwd_same();
     bool is_user();
+    void logout(wxCommandEvent& evt);
 };

@@ -74,6 +74,15 @@ void ImagePanel::save_filename(wxFileDirPickerEvent& evt)
 	model.set_image((std::string)evt.GetPath());
 }
 
+void ImagePanel::logout(wxCommandEvent& evt)
+{
+	Login* login = new Login("Login");
+	login->SetClientSize(300, 300);
+	login->Center();
+	login->Show();
+	this->GetGrandParent()->Close();
+}
+
 WebcamPanel::WebcamPanel(wxWindow* parent) : wxPanel(parent, wxID_ANY)
 {
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
@@ -344,4 +353,13 @@ bool UserPanel::is_user()
 	{
 		wxMessageBox("Poco Exception: " + ex.displayText());
 	}
+}
+
+void UserPanel::logout(wxCommandEvent& evt)
+{
+	Login* login = new Login("Login");
+	login->SetClientSize(300, 300);
+	login->Center();
+	login->Show();
+	this->GetGrandParent()->Close();
 }
